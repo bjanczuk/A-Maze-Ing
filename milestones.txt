@@ -1,0 +1,18 @@
+Milestones
+
+1. Determine whether to use Python or C++ for our project through research.
+
+2. Do tutorials for a graphics library in whatever language we choose.
+
+3. Determine how we are going to represent the mazes, using cells and boards.
+
+4. Begin writing code for however we choose to represent the maze. 
+
+5. Start implementing the simplest maze algorithm (recursive backtracking method)
+
+Rubric (out of 40)
+Goal 1 - 5
+Goal 2 - 10
+Goal 3 - 5
+Goal 4 - 10
+Goal 5 - 10
