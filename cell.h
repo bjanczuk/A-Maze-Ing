@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+enum WALL {LEFT, UP, RIGHT, DOWN};
+
 using namespace std;
 
 class cell {
