@@ -12,12 +12,14 @@ using namespace std;
 
 class maze {
   public:
-    maze();
+    maze(const int = 20);
     ~maze();
     void startCell();
+    void checkNeighbors();
 
   private:
-    cell grid[20][20]; // hard coded right now, but will be flexible later
+    int size;
+    cell ** grid; // hard coded right now, but will be flexible later
 
 };
 

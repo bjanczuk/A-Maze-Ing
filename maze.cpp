@@ -10,11 +10,22 @@
 
 using namespace std;
 
-maze::maze()
-{ }
+
+
+maze::maze(int n)
+{
+  cell ** grid = new cell*[n];
+  for (int i = 0; i < n; i++)
+    grid[i] = new cell[n];
+  size = n;
+}
 
 maze::~maze()
-{ }
+{ 
+  for (int i = 0; i < size; i++)
+    delete [] grid[i];
+  delete [] grid;
+}
 
 void maze::startCell()
 {
@@ -23,18 +34,22 @@ void maze::startCell()
   switch (start)
   {
     case 0:
-      grid[0][rand() % 20].switchWall(0);
+      grid[0][rand() % size].switchWall(0);
       break;
     case 1:
-      grid[rand() % 20][0].switchWall(1);
+      grid[rand() % size][0].switchWall(1);
       break;
     case 2:
-      grid[19][rand() % 20].switchWall(2);
+      grid[size-1][rand() % size].switchWall(2);
       break;
     case 3:
-      grid[rand() % 20][19].switchWall(3);
+      grid[rand() % size][size - 1].switchWall(3);
       break;
   }
 }
 
+void maze::checkNeighbors()
+{
+
+}
 
