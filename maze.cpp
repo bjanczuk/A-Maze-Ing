@@ -7,6 +7,7 @@
 #include <time.h>
 #include "cell.h"
 #include "maze.h"
+#include <stack>
 
 using namespace std;
 
@@ -34,23 +35,28 @@ bool maze::checkBoundaries(int r, int c)
 	return (r >= 0 && c >= 0 && r < size && c < size);
 }
 
-void maze::startCell()
+pair<int, int> maze::startCell()
 {
   srand(time(NULL));
   int start = rand() % 4;
+  int randCell = rand() % size;
   switch (start)
   {
     case 0:
-      grid[0][rand() % size].switchWall(0, false);
+      grid[0][randCell].switchWall(0);
+      return make_pair(0, randCell);
       break;
     case 1:
-      grid[rand() % size][0].switchWall(1, false);
+      grid[randCell][0].switchWall(1);
+      return make_pair(randCell, 0);
       break;
     case 2:
-      grid[size-1][rand() % size].switchWall(2, false);
+      grid[size-1][randCell].switchWall(2);
+      return make_pair(size-1, randCell);
       break;
     case 3:
-      grid[rand() % size][size - 1].switchWall(3, false);
+      grid[randCell][size - 1].switchWall(3);
+      return make_pair(randCell, size-1);
       break;
   }
 }
@@ -108,3 +114,35 @@ void maze::removeSharedWall(pair<int, int> x, pair<int, int> y)
     grid[y.first][y.second].switchWall(LEFT, false);
   }
 }
+
+void maze::recursiveBack(pair<int, int> start) 
+{
+    cell curr = grid[start.first][start.second];
+    curr.setVisited(true);
+
+    if (allVisited())
+    {
+        return;
+    }
+    
+    pair<int, int> neigh = checkNeighbors(start.first, start.second);
+    if (neigh.first >= 0)
+    {
+        cellStack.push(curr);
+        removeSharedWall(start, neigh);
+        start = neigh;
+        recursiveBack(start);
+    }
+    else if (!cellStack.empty)
+    {
+        start = cellStack.top();
+        cellStack.pop();
+        recursiveBack(start);
+    }
+    else
+    {
+        return;
+    }
+}
+
+

@@ -16,15 +16,17 @@ class maze {
     maze(const int = 20);
     ~maze();
     bool checkBoundaries(int, int);
-    void startCell();
+    pair<int, int> startCell();
     bool allVisited();
     pair<int, int> checkNeighbors(int, int);
     void removeSharedWall(pair<int, int>, pair<int, int>);
+    void recursiveBack(pair<int, int>);
 
   private:
     int size;
     cell ** grid; // hard coded right now, but will be flexible later
-
+    stack<cell> cellStack;
 };
 
 #endif
+
