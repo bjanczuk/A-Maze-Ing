@@ -7,6 +7,7 @@
 #include "cell.h"
 
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -14,8 +15,11 @@ class maze {
   public:
     maze(const int = 20);
     ~maze();
+    bool checkBoundaries(int, int);
     void startCell();
-    void checkNeighbors();
+    bool allVisited();
+    pair<int, int> checkNeighbors(int, int);
+    void removeSharedWall(pair<int, int>, pair<int, int>);
 
   private:
     int size;

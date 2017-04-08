@@ -19,9 +19,14 @@ cell::cell()
 cell::~cell()
 { }
 
-void cell::switchWall(int i)
+void cell::setVisited(bool visit)
 {
-  wall[i] = !wall[i];
+  visited = visit;
+}
+
+void cell::switchWall(int i, bool on)
+{
+  wall[i] = on;
 }
 
 bool cell::getWall(int i)

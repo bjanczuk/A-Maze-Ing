@@ -14,7 +14,8 @@ class cell {
   public:
     cell(); // constructor
     ~cell(); // destructor
-    void switchWall(int);
+    void setVisited(bool);
+    void switchWall(int, bool);
     bool getWall(int);
     bool isVisited();
 
