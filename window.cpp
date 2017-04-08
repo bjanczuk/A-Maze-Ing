@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	//SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 	SDL_UpdateWindowSurface(window);
 	SDL_Delay(3000);
-	*/
+	
 
 	
 
