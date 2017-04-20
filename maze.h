@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <set>
 
 using namespace std;
 
@@ -19,16 +20,20 @@ class maze {
     bool checkBoundaries(int, int);
     pair<int, int> startCell();
     bool allVisited();
-    pair<int, int> checkNeighbors(int, int);
+    vector<pair<int, int>> getNeighbors(int, int);
+    pair<int, int> removeVisitedNeighbors(int, int);
     void removeSharedWall(pair<int, int>, pair<int, int>);
+    void addToFrontier(vector<pair<int, int>>);
     void recursiveBack(pair<int, int>);
-    //void prims(pair<int, int>);
+    void prims(pair<int, int>);
 
   private:
     int size;
     cell ** grid; // hard coded right now, but will be flexible later
     stack<cell> cellStack;
+    set<pair<int, int>> frontier;
 };
 
 #endif
+
 

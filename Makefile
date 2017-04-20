@@ -6,6 +6,8 @@ MAIN = main
 EXEC = runMaze
 WINDOW = window
 
+all:	$(EXEC) $(WINDOW)
+
 $(EXEC): $(CLASS1).o $(CLASS2).o $(MAIN).o
 	$(CMP) $(CLASS1).o $(CLASS2).o	$(MAIN).o -o $(EXEC)
 

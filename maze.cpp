@@ -7,7 +7,6 @@
 #include <time.h>
 #include "cell.h"
 #include "maze.h"
-#include <stack>
 
 using namespace std;
 
@@ -76,17 +75,33 @@ bool maze::allVisited()
   return true;
 }
 
-pair<int, int> maze::checkNeighbors(int r, int c)
+vector<pair<int, int>> maze::getNeighbors(int r, int c)
 {
-  vector<pair<int, int>> neighbors; // vector of the unvisited neighbors for the cell at r,c
-  neighbors.emplace_back(r-1, c); neighbors.emplace_back(r+1, c); neighbors.emplace_back(r, c-1); neighbors.emplace_back(r, c+1); // add the four neighbors to the vector
+  vector<pair<int, int>> neighbors; // vector of the neighbors for the cell at r,c
+  
+  // add the four neighbors to the vector
+  neighbors.emplace_back(r-1, c); neighbors.emplace_back(r+1, c);
+  neighbors.emplace_back(r, c-1); neighbors.emplace_back(r, c+1);
+
+  for (auto it = neighbors.begin(); it != neighbors.end(); it++)
+  {
+    if (!checkBoundaries((*it).first, (*it).second))
+      neighbors.erase(it); // remove any cell that's out of bounds
+  }
+
+  return neighbors;
+}
+
+pair<int, int> maze::removeVisitedNeighbors(int r, int c)
+{
+  vector<pair<int, int>> neighbors = getNeighbors(r, c); // vector of the cell's neighbors
   
   // check each neighbor
   for (auto it = neighbors.begin(); it != neighbors.end(); it++)
   {
-    if (!checkBoundaries((*it).first, (*it).second) || grid[(*it).first][(*it).second].isVisited())
+    if (grid[(*it).first][(*it).second].isVisited())
     {
-      neighbors.erase(it); // remove a cell if it's either out of bounds or has been visited
+      neighbors.erase(it); // remove a cell if it has been visited
     }
   }
   
@@ -125,7 +140,7 @@ void maze::recursiveBack(pair<int, int> start)
     if (allVisited())
         return;
     
-    pair<int, int> neigh = checkNeighbors(start.first, start.second);
+    pair<int, int> neigh = removeVisitedNeighbors(start.first, start.second);
     if (neigh.first >= 0) // make sure a neighbor was found
     {
         cellStack.push(curr);
@@ -145,6 +160,48 @@ void maze::recursiveBack(pair<int, int> start)
     }
 }
 
-//void maze::prims(pair<int,int> start)
-//{
-//}
+void maze::prims(pair<int,int> start)
+{
+    cell curr = grid[start.first][start.second];
+    curr.setVisited(true);
+    auto it = frontier.begin();
+    int index, currIndex;
+
+    vector<pair<int, int>> neighbors = getNeighbors(curr.getCoords().first, curr.getCoords().second);
+    addToFrontier(neighbors); // set up the initial frontier
+
+    while (frontier.size()) // iterate until the frontier is empty
+    {
+      it = frontier.begin();
+      advance(it, rand() % frontier.size()); // randomly choose a frontier cell
+      
+      curr = grid[(*it).first][(*it).second];
+      curr.setVisited(true);
+      frontier.erase(it); // remove the cell from the frontier
+
+      neighbors = getNeighbors(curr.getCoords().first, curr.getCoords().second); // get the new cell's neighbors
+      index = rand() % neighbors.size(); // start at a random neighbor
+      currIndex = index;
+
+      do // look for a neighbor that's visited
+      {
+        if (grid[neighbors[currIndex].first][neighbors[currIndex].second].isVisited()) // a visited cell was found, so break
+          break;
+        currIndex++;
+        currIndex %= neighbors.size(); // make sure the index is in bounds
+      }
+      while (currIndex != index);
+
+      removeSharedWall(grid[neighbors[currIndex].first][neighbors[currIndex].second].getCoords(), curr.getCoords());
+    }
+}
+
+void maze::addToFrontier(vector<pair<int, int>> neighbors)
+{
+    for (auto it = neighbors.begin(); it != neighbors.end(); it++)
+    {
+      if (grid[(*it).first][(*it).second].isVisited() == false)
+        frontier.insert(*it);
+    }
+}
+
