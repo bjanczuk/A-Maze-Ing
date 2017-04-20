@@ -11,8 +11,6 @@
 
 using namespace std;
 
-
-
 maze::maze(int n)
 {
   cell ** grid = new cell*[n];
@@ -43,19 +41,19 @@ pair<int, int> maze::startCell()
   switch (start)
   {
     case 0:
-      grid[0][randCell].switchWall(0);
+      grid[0][randCell].switchWall(0, true);
       return make_pair(0, randCell);
       break;
     case 1:
-      grid[randCell][0].switchWall(1);
+      grid[randCell][0].switchWall(1, true);
       return make_pair(randCell, 0);
       break;
     case 2:
-      grid[size-1][randCell].switchWall(2);
+      grid[size-1][randCell].switchWall(2, true);
       return make_pair(size-1, randCell);
       break;
     case 3:
-      grid[randCell][size - 1].switchWall(3);
+      grid[randCell][size - 1].switchWall(3, true);
       return make_pair(randCell, size-1);
       break;
   }
@@ -121,9 +119,7 @@ void maze::recursiveBack(pair<int, int> start)
     curr.setVisited(true);
 
     if (allVisited())
-    {
         return;
-    }
     
     pair<int, int> neigh = checkNeighbors(start.first, start.second);
     if (neigh.first >= 0)
@@ -133,7 +129,7 @@ void maze::recursiveBack(pair<int, int> start)
         start = neigh;
         recursiveBack(start);
     }
-    else if (!cellStack.empty)
+    else if (!cellStack.empty())
     {
         start = cellStack.top();
         cellStack.pop();
@@ -145,4 +141,6 @@ void maze::recursiveBack(pair<int, int> start)
     }
 }
 
-
+//void maze::prims(pair<int,int> start)
+//{
+//}

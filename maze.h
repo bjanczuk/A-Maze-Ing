@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ class maze {
     pair<int, int> checkNeighbors(int, int);
     void removeSharedWall(pair<int, int>, pair<int, int>);
     void recursiveBack(pair<int, int>);
+    //void prims(pair<int, int>);
 
   private:
     int size;
