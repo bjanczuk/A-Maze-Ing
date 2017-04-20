@@ -18,10 +18,13 @@ class cell {
     void switchWall(int, bool);
     bool getWall(int);
     bool isVisited();
+    void setCoords(int, int);
+    pair<int, int> getCoords();
 
   private:
     bool wall[4]; // 0 = left, 1 = up, 2 = right, 3 = down
     bool visited;
+    pair<int, int> coords;
 };
 
 #endif

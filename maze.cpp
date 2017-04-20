@@ -17,6 +17,10 @@ maze::maze(int n)
   for (int i = 0; i < n; i++)
   {
     grid[i] = new cell[n];
+    for (int j = 0; j < n; j++) // set the new cell coordinates
+    {
+    	grid[i][j].setCoords(i, j);
+    }
   }
   size = n;
 }
@@ -52,7 +56,7 @@ pair<int, int> maze::startCell()
       grid[size-1][randCell].switchWall(2, true);
       return make_pair(size-1, randCell);
       break;
-    case 3:
+    default: // effectively case 3
       grid[randCell][size - 1].switchWall(3, true);
       return make_pair(randCell, size-1);
       break;
@@ -122,7 +126,7 @@ void maze::recursiveBack(pair<int, int> start)
         return;
     
     pair<int, int> neigh = checkNeighbors(start.first, start.second);
-    if (neigh.first >= 0)
+    if (neigh.first >= 0) // make sure a neighbor was found
     {
         cellStack.push(curr);
         removeSharedWall(start, neigh);
@@ -131,7 +135,7 @@ void maze::recursiveBack(pair<int, int> start)
     }
     else if (!cellStack.empty())
     {
-        start = cellStack.top();
+        start = cellStack.top().getCoords();
         cellStack.pop();
         recursiveBack(start);
     }

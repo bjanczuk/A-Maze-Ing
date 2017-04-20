@@ -39,3 +39,13 @@ bool cell::isVisited()
   return visited;
 }
 
+void cell::setCoords(int x, int y)
+{
+	coords.first = x;
+	coords.second = y;
+}
+
+pair<int, int> cell::getCoords()
+{
+	return coords;
+}
