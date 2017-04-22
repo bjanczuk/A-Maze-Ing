@@ -1,14 +1,16 @@
 //draw.h
 
-#ifndef Draw_H
-#define Draw_H
+#ifndef DRAW_H
+#define DRAW_H
 
 using namespace std;
 
-class Draw{
+class draw{
 	public:
 		Draw();
 		~Draw();
 		int drawBox(int, int);
 	
 };
+
+#endif
