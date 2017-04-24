@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <vector>
@@ -181,12 +182,16 @@ void maze::prims(pair<int,int> start, SDL_Renderer* renderer)
       advance(it, rand() % frontier.size()); // randomly choose a frontier cell
       
       curr = grid[(*it).first][(*it).second];
+      cout << frontier.size() << endl;
+      cout << "\t" << (*it).first << " " << (*it).second << " ";
       curr.setVisited(true);
       frontier.erase(it); // remove the cell from the frontier
 
       neighbors = getNeighbors(curr.getCoords().first, curr.getCoords().second); // get the new cell's neighbors
+      addToFrontier(neighbors);
       index = rand() % neighbors.size(); // start at a random neighbor
       currIndex = index;
+      cout << neighbors.size() << " " << currIndex << endl;
 
       do // look for a neighbor that's visited
       {
@@ -205,6 +210,7 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
 {
     for (auto it = neighbors.begin(); it != neighbors.end(); it++)
     {
+      cout << "adding to frontier: " << (*it).first << " " << (*it).second << endl;
       if (grid[(*it).first][(*it).second].isVisited() == false)
         frontier.insert(*it);
     }
@@ -235,5 +241,8 @@ void maze::drawWall(int i, int j, int wall, SDL_Renderer* renderer) {
       SDL_RenderDrawLine(renderer, i*30, j*30 + 30, i*30 + 30, j*30 + 30); // down
       break;
   }
+  
+  SDL_RenderPresent(renderer);
+  usleep(3000000);
 }
 

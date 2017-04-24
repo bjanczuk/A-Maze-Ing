@@ -12,6 +12,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+  srand(time(NULL));
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -19,9 +20,9 @@ int main(int argc, char* argv[])
       SDL_bool done = SDL_FALSE;
       while (!done) {
 	SDL_Event event;
-	maze newMaze(renderer, 20);
+	maze newMaze(renderer, 5);
 	//newMaze.recursiveBack(make_pair(0, 0), renderer);
-	//newMaze.prims(make_pair(0, 0), renderer);
+	newMaze.prims(make_pair(0, 0), renderer);
 
 	while (SDL_PollEvent(&event)) {
 	  if (event.type == SDL_QUIT) {
