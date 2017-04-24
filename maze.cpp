@@ -5,35 +5,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <SDL2/SDL.h>
+#include <vector>
 #include "cell.h"
 #include "maze.h"
 
 using namespace std;
 
-maze::maze(int n)
+maze::maze(SDL_Renderer* renderer, int n)
 {
-  cell ** grid = new cell*[n];
+  cell tempCell;
+  vector<cell> tempVec(n, tempCell);
   for (int i = 0; i < n; i++)
   {
-    grid[i] = new cell[n];
+    grid.push_back(tempVec);
     for (int j = 0; j < n; j++) // set the new cell coordinates
     {
     	grid[i][j].setCoords(i, j);
+	drawBox(i, j, renderer);
     }
+    SDL_RenderPresent(renderer);
   }
   size = n;
 }
 
 maze::~maze()
-{ 
-  for (int i = 0; i < size; i++)
-    delete [] grid[i];
-  delete [] grid;
-}
+{ }
 
 bool maze::checkBoundaries(int r, int c)
 {
-	return (r >= 0 && c >= 0 && r < size && c < size);
+  return (r >= 0 && c >= 0 && r < size && c < size);
 }
 
 pair<int, int> maze::startCell()
@@ -108,31 +109,35 @@ pair<int, int> maze::removeVisitedNeighbors(int r, int c)
   return (neighbors.size()) ? neighbors[rand() % neighbors.size()] : make_pair(-1, -1); // randomly return one of the non-visited neighbors
 }
 
-void maze::removeSharedWall(pair<int, int> x, pair<int, int> y)
+void maze::removeSharedWall(pair<int, int> x, pair<int, int> y, SDL_Renderer* renderer)
 {
   if (x.first > y.first) // x is beneath y
   {
     grid[x.first][x.second].switchWall(UP, false);
-    grid[y.first][y.second].switchWall(DOWN, false); 
+    grid[y.first][y.second].switchWall(DOWN, false);
+    drawWall(x.first, x.second, UP, renderer);
   }
   else if (x.first < y.first) // x is above y
   {
     grid[x.first][x.second].switchWall(DOWN, false);
     grid[y.first][y.second].switchWall(UP, false);
+    drawWall(x.first, x.second, DOWN, renderer);
   }
   else if (x.second > y.second) // x is to the right of y
   {
     grid[x.first][x.second].switchWall(LEFT, false);
     grid[y.first][y.second].switchWall(RIGHT, false);
+    drawWall(x.first, x.second, LEFT, renderer);
   }
   else if (x.second < y.second) // x is to the left of y
   {
     grid[x.first][x.second].switchWall(RIGHT, false);
     grid[y.first][y.second].switchWall(LEFT, false);
+    drawWall(x.first, x.second, RIGHT, renderer);
   }
 }
 
-void maze::recursiveBack(pair<int, int> start) 
+void maze::recursiveBack(pair<int, int> start, SDL_Renderer* renderer) 
 {
     cell curr = grid[start.first][start.second];
     curr.setVisited(true);
@@ -144,15 +149,15 @@ void maze::recursiveBack(pair<int, int> start)
     if (neigh.first >= 0) // make sure a neighbor was found
     {
         cellStack.push(curr);
-        removeSharedWall(start, neigh);
+        removeSharedWall(start, neigh, renderer);
         start = neigh;
-        recursiveBack(start);
+        recursiveBack(start, renderer);
     }
     else if (!cellStack.empty())
     {
         start = cellStack.top().getCoords();
         cellStack.pop();
-        recursiveBack(start);
+        recursiveBack(start, renderer);
     }
     else
     {
@@ -160,7 +165,7 @@ void maze::recursiveBack(pair<int, int> start)
     }
 }
 
-void maze::prims(pair<int,int> start)
+void maze::prims(pair<int,int> start, SDL_Renderer* renderer)
 {
     cell curr = grid[start.first][start.second];
     curr.setVisited(true);
@@ -192,7 +197,7 @@ void maze::prims(pair<int,int> start)
       }
       while (currIndex != index);
 
-      removeSharedWall(grid[neighbors[currIndex].first][neighbors[currIndex].second].getCoords(), curr.getCoords());
+      removeSharedWall(grid[neighbors[currIndex].first][neighbors[currIndex].second].getCoords(), curr.getCoords(), renderer);
     }
 }
 
@@ -203,5 +208,32 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
       if (grid[(*it).first][(*it).second].isVisited() == false)
         frontier.insert(*it);
     }
+}
+
+void maze::drawBox(int i, int j, SDL_Renderer* renderer) {
+  SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+  //format: SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+  SDL_RenderDrawLine(renderer, i*30, j*30, i*30, j*30 + 30); // left
+  SDL_RenderDrawLine(renderer, i*30, j*30, i*30 + 30, j*30); // up
+  SDL_RenderDrawLine(renderer, i*30 + 30, j*30, i*30 + 30, j*30 + 30); // right
+  SDL_RenderDrawLine(renderer, i*30, j*30 + 30, i*30 + 30, j*30 + 30); // down
+}
+
+void maze::drawWall(int i, int j, int wall, SDL_Renderer* renderer) {
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+  switch (wall) {
+    case LEFT:
+      SDL_RenderDrawLine(renderer, i*30, j*30, i*30, j*30 + 30); // left
+      break;
+    case UP:
+      SDL_RenderDrawLine(renderer, i*30, j*30, i*30 + 30, j*30); // up
+      break;
+    case RIGHT:
+      SDL_RenderDrawLine(renderer, i*30 + 30, j*30, i*30 + 30, j*30 + 30); // right
+      break;
+    case DOWN:
+      SDL_RenderDrawLine(renderer, i*30, j*30 + 30, i*30 + 30, j*30 + 30); // down
+      break;
+  }
 }
 

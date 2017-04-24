@@ -15,21 +15,24 @@ using namespace std;
 
 class maze {
   public:
-    maze(const int = 20);
+    maze(SDL_Renderer*, const int = 20);
     ~maze();
     bool checkBoundaries(int, int);
     pair<int, int> startCell();
     bool allVisited();
     vector<pair<int, int>> getNeighbors(int, int);
     pair<int, int> removeVisitedNeighbors(int, int);
-    void removeSharedWall(pair<int, int>, pair<int, int>);
+    void removeSharedWall(pair<int, int>, pair<int, int>, SDL_Renderer*);
     void addToFrontier(vector<pair<int, int>>);
-    void recursiveBack(pair<int, int>);
-    void prims(pair<int, int>);
+    void recursiveBack(pair<int, int>, SDL_Renderer*);
+    void prims(pair<int, int>, SDL_Renderer*);
+    void drawBox(int, int, SDL_Renderer*);
+    void drawWall(int, int, int, SDL_Renderer*);
 
   private:
     int size;
-    cell ** grid; // hard coded right now, but will be flexible later
+    vector<vector<cell>> grid;
+    //cell ** grid; // hard coded right now, but will be flexible later
     stack<cell> cellStack;
     set<pair<int, int>> frontier;
 };
