@@ -11,6 +11,8 @@
 #include "cell.h"
 #include "maze.h"
 
+const int LINESIZE = 30;
+
 using namespace std;
 
 maze::maze(SDL_Renderer* renderer, int n)
@@ -25,6 +27,7 @@ maze::maze(SDL_Renderer* renderer, int n)
     	grid[i][j].setCoords(i, j);
 	drawBox(i, j, renderer);
     }
+    cout << grid.size() << " " << grid[i].size();
     SDL_RenderPresent(renderer);
   }
   size = n;
@@ -112,6 +115,7 @@ pair<int, int> maze::removeVisitedNeighbors(int r, int c)
 
 void maze::removeSharedWall(pair<int, int> x, pair<int, int> y, SDL_Renderer* renderer)
 {
+  cout << "first: " << x.first << " " << x.second << "   second: " << y.first << " " << y.second << endl;
   if (x.first > y.first) // x is beneath y
   {
     grid[x.first][x.second].switchWall(UP, false);
@@ -219,30 +223,30 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
 void maze::drawBox(int i, int j, SDL_Renderer* renderer) {
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
   //format: SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
-  SDL_RenderDrawLine(renderer, i*30, j*30, i*30, j*30 + 30); // left
-  SDL_RenderDrawLine(renderer, i*30, j*30, i*30 + 30, j*30); // up
-  SDL_RenderDrawLine(renderer, i*30 + 30, j*30, i*30 + 30, j*30 + 30); // right
-  SDL_RenderDrawLine(renderer, i*30, j*30 + 30, i*30 + 30, j*30 + 30); // down
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + 30); // left
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE); // up
+  SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // right
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + 30, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // down
 }
 
 void maze::drawWall(int i, int j, int wall, SDL_Renderer* renderer) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   switch (wall) {
     case LEFT:
-      SDL_RenderDrawLine(renderer, i*30, j*30, i*30, j*30 + 30); // left
+      SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + LINESIZE); // left
       break;
     case UP:
-      SDL_RenderDrawLine(renderer, i*30, j*30, i*30 + 30, j*30); // up
+      SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE); // up
       break;
     case RIGHT:
-      SDL_RenderDrawLine(renderer, i*30 + 30, j*30, i*30 + 30, j*30 + 30); // right
+      SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // right
       break;
     case DOWN:
-      SDL_RenderDrawLine(renderer, i*30, j*30 + 30, i*30 + 30, j*30 + 30); // down
+      SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // down
       break;
   }
   
   SDL_RenderPresent(renderer);
-  usleep(3000000);
+  usleep(20000000);
 }
 
