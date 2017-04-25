@@ -223,10 +223,10 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
 void maze::drawBox(int i, int j, SDL_Renderer* renderer) {
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
   //format: SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
-  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + 30); // left
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + LINESIZE); // left
   SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE); // up
-  SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // right
-  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + 30, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // down
+  SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // right
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // down
 }
 
 void maze::drawWall(int i, int j, int wall, SDL_Renderer* renderer) {

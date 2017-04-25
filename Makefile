@@ -22,6 +22,9 @@ $(CLASS2).o: $(CLASS2).cpp $(CLASS2).h
 
 $(MAIN).o: $(MAIN).cpp $(CLASS1).o $(CLASS2).o
 	$(CMP) -c $(LINKER_FLAGS) $(MAIN).cpp -o $(MAIN).o
+	
+kill:	
+	killall -9 runMaze
 
 clean:
 	rm *.o
