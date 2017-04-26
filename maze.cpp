@@ -87,12 +87,13 @@ vector<pair<int, int>> maze::getNeighbors(int r, int c)
   neighbors.emplace_back(r-1, c); neighbors.emplace_back(r+1, c);
   neighbors.emplace_back(r, c-1); neighbors.emplace_back(r, c+1);
 
-  for (auto it = neighbors.begin(); it != neighbors.end(); it++)
+  for (auto it = neighbors.begin(); it != neighbors.end();)
   {
     if (!checkBoundaries((*it).first, (*it).second))
       neighbors.erase(it); // remove any cell that's out of bounds
+    else
+      it++;
   }
-
   return neighbors;
 }
 
@@ -215,14 +216,8 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
 {
     for (auto it = neighbors.begin(); it != neighbors.end(); it++)
     {
-      cout << "\t it = " << (*it).first << " " << (*it).second << endl;
       if (grid[(*it).first][(*it).second].isVisited() == false)
-      {
-        cout << "is not visited" << endl;
         frontier.insert(*it);
-      }
-      else
-        cout << "is visited" << endl;
     }
 }
 
