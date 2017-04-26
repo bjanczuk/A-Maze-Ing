@@ -48,19 +48,19 @@ pair<int, int> maze::startCell()
   switch (start)
   {
     case 0:
-      grid[0][randCell].switchWall(0, true);
+      grid[0][randCell].switchWall(0, false);
       return make_pair(0, randCell);
       break;
     case 1:
-      grid[randCell][0].switchWall(1, true);
+      grid[randCell][0].switchWall(1, false);
       return make_pair(randCell, 0);
       break;
     case 2:
-      grid[size-1][randCell].switchWall(2, true);
+      grid[size-1][randCell].switchWall(2, false);
       return make_pair(size-1, randCell);
       break;
     default: // effectively case 3
-      grid[randCell][size - 1].switchWall(3, true);
+      grid[randCell][size - 1].switchWall(3, false);
       return make_pair(randCell, size-1);
       break;
   }
@@ -102,11 +102,15 @@ pair<int, int> maze::removeVisitedNeighbors(int r, int c)
   vector<pair<int, int>> neighbors = getNeighbors(r, c); // vector of the cell's neighbors
   
   // check each neighbor
-  for (auto it = neighbors.begin(); it != neighbors.end(); it++)
+  for (auto it = neighbors.begin(); it != neighbors.end();)
   {
     if (grid[(*it).first][(*it).second].isVisited())
     {
       neighbors.erase(it); // remove a cell if it has been visited
+    }
+    else
+    {
+      it++;
     }
   }
   
@@ -144,7 +148,7 @@ void maze::removeSharedWall(pair<int, int> x, pair<int, int> y, SDL_Renderer* re
 void maze::recursiveBack(pair<int, int> start, SDL_Renderer* renderer) 
 {
     cell curr = grid[start.first][start.second];
-    curr.setVisited(true);
+    grid[start.first][start.second].setVisited(true);
 
     if (allVisited())
         return;
@@ -248,6 +252,6 @@ void maze::drawWall(int j, int i, int wall, SDL_Renderer* renderer) {
   }
   
   SDL_RenderPresent(renderer);
-  usleep(1000000);
+  usleep(10000);
 }
 
