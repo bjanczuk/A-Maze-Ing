@@ -114,8 +114,7 @@ pair<int, int> maze::removeVisitedNeighbors(int r, int c)
 }
 
 void maze::removeSharedWall(pair<int, int> x, pair<int, int> y, SDL_Renderer* renderer)
-{
-  cout << "first: " << x.first << " " << x.second << "   second: " << y.first << " " << y.second << endl;
+{ 
   if (x.first > y.first) // x is beneath y
   {
     grid[x.first][x.second].switchWall(UP, false);
@@ -223,25 +222,30 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
 void maze::drawBox(int i, int j, SDL_Renderer* renderer) {
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
   //format: SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
-  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + LINESIZE); // left
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + 30); // left
   SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE); // up
-  SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // right
-  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // down
+  SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // right
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + 30, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // down
 }
 
-void maze::drawWall(int i, int j, int wall, SDL_Renderer* renderer) {
+void maze::drawWall(int j, int i, int wall, SDL_Renderer* renderer) {
+  cout << "i = " << i << " j = " << j << endl;
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   switch (wall) {
     case LEFT:
+      cout << "LEFT" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + LINESIZE); // left
       break;
     case UP:
+      cout << "UP" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE); // up
       break;
     case RIGHT:
+      cout << "RIGHT" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // right
       break;
     case DOWN:
+      cout << "DOWN" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // down
       break;
   }
