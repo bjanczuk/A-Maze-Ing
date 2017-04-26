@@ -25,9 +25,8 @@ maze::maze(SDL_Renderer* renderer, int n)
     for (int j = 0; j < n; j++) // set the new cell coordinates
     {
     	grid[i][j].setCoords(i, j);
-	drawBox(i, j, renderer);
+	    drawBox(i, j, renderer);
     }
-    cout << grid.size() << " " << grid[i].size();
     SDL_RenderPresent(renderer);
   }
   size = n;
@@ -172,7 +171,7 @@ void maze::recursiveBack(pair<int, int> start, SDL_Renderer* renderer)
 void maze::prims(pair<int,int> start, SDL_Renderer* renderer)
 {
     cell curr = grid[start.first][start.second];
-    curr.setVisited(true);
+    grid[start.first][start.second].setVisited(true);
     auto it = frontier.begin();
     int index, currIndex;
 
@@ -184,17 +183,20 @@ void maze::prims(pair<int,int> start, SDL_Renderer* renderer)
       it = frontier.begin();
       advance(it, rand() % frontier.size()); // randomly choose a frontier cell
       
+      /*cout << curr.getCoords().first << " " << curr.getCoords().second << " frontier: ";
+      for (auto it = frontier.begin(); it != frontier.end(); it++)
+        cout << (*it).first << " " << (*it).second << "    ";
+      cout << "current: " << (*it).first << " " << (*it).second << endl; */
+
       curr = grid[(*it).first][(*it).second];
-      cout << frontier.size() << endl;
-      cout << "\t" << (*it).first << " " << (*it).second << " ";
-      curr.setVisited(true);
+
+      grid[(*it).first][(*it).second].setVisited(true);
       frontier.erase(it); // remove the cell from the frontier
 
       neighbors = getNeighbors(curr.getCoords().first, curr.getCoords().second); // get the new cell's neighbors
       addToFrontier(neighbors);
       index = rand() % neighbors.size(); // start at a random neighbor
       currIndex = index;
-      cout << neighbors.size() << " " << currIndex << endl;
 
       do // look for a neighbor that's visited
       {
@@ -213,9 +215,14 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
 {
     for (auto it = neighbors.begin(); it != neighbors.end(); it++)
     {
-      cout << "adding to frontier: " << (*it).first << " " << (*it).second << endl;
+      cout << "\t it = " << (*it).first << " " << (*it).second << endl;
       if (grid[(*it).first][(*it).second].isVisited() == false)
+      {
+        cout << "is not visited" << endl;
         frontier.insert(*it);
+      }
+      else
+        cout << "is visited" << endl;
     }
 }
 
@@ -229,28 +236,23 @@ void maze::drawBox(int i, int j, SDL_Renderer* renderer) {
 }
 
 void maze::drawWall(int j, int i, int wall, SDL_Renderer* renderer) {
-  cout << "i = " << i << " j = " << j << endl;
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   switch (wall) {
     case LEFT:
-      cout << "LEFT" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + LINESIZE); // left
       break;
     case UP:
-      cout << "UP" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE); // up
       break;
     case RIGHT:
-      cout << "RIGHT" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // right
       break;
     case DOWN:
-      cout << "DOWN" << endl;
       SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // down
       break;
   }
   
   SDL_RenderPresent(renderer);
-  usleep(20000000);
+  usleep(1000000);
 }
 
