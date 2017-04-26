@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <iostream>
+#include <unistd.h>
 
 #include "cell.h"
 #include "maze.h"
@@ -20,9 +21,10 @@ int main(int argc, char* argv[])
       SDL_bool done = SDL_FALSE;
       while (!done) {
 	SDL_Event event;
-	maze newMaze(renderer, 5);
+	maze newMaze(renderer, 20);
 	//newMaze.recursiveBack(make_pair(0, 0), renderer);
-	newMaze.prims(make_pair(0, 0), renderer);
+	newMaze.prims(newMaze.startCell(), renderer);
+	usleep(10000000);
 
 	while (SDL_PollEvent(&event)) {
 	  if (event.type == SDL_QUIT) {
