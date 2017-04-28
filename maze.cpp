@@ -11,11 +11,12 @@
 #include "cell.h"
 #include "maze.h"
 
-const int LINESIZE = 30;
+static int LINESIZE = 30;
+static int WAIT;
 
 using namespace std;
 
-maze::maze(SDL_Renderer* renderer, int n)
+maze::maze(SDL_Renderer* renderer, int n, int wait)
 {
   cell tempCell;
   vector<cell> tempVec(n, tempCell);
@@ -30,6 +31,7 @@ maze::maze(SDL_Renderer* renderer, int n)
     SDL_RenderPresent(renderer);
   }
   size = n;
+  WAIT = wait;
 }
 
 maze::~maze()
@@ -187,11 +189,6 @@ void maze::prims(pair<int,int> start, SDL_Renderer* renderer)
     {
       it = frontier.begin();
       advance(it, rand() % frontier.size()); // randomly choose a frontier cell
-      
-      /*cout << curr.getCoords().first << " " << curr.getCoords().second << " frontier: ";
-      for (auto it = frontier.begin(); it != frontier.end(); it++)
-        cout << (*it).first << " " << (*it).second << "    ";
-      cout << "current: " << (*it).first << " " << (*it).second << endl; */
 
       curr = grid[(*it).first][(*it).second];
 
@@ -227,11 +224,10 @@ void maze::addToFrontier(vector<pair<int, int>> neighbors)
 
 void maze::drawBox(int i, int j, SDL_Renderer* renderer) {
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-  //format: SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
-  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + 30); // left
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE, j*LINESIZE + LINESIZE); // left
   SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE); // up
-  SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // right
-  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + 30, i*LINESIZE + LINESIZE, j*LINESIZE + 30); // down
+  SDL_RenderDrawLine(renderer, i*LINESIZE + LINESIZE, j*LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // right
+  SDL_RenderDrawLine(renderer, i*LINESIZE, j*LINESIZE + LINESIZE, i*LINESIZE + LINESIZE, j*LINESIZE + LINESIZE); // down
 }
 
 void maze::drawWall(int j, int i, int wall, SDL_Renderer* renderer) {
@@ -252,6 +248,6 @@ void maze::drawWall(int j, int i, int wall, SDL_Renderer* renderer) {
   }
   
   SDL_RenderPresent(renderer);
-  usleep(10000);
+  usleep(WAIT);
 }
 
