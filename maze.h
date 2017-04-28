@@ -15,7 +15,7 @@ using namespace std;
 
 class maze {
   public:
-    maze(SDL_Renderer*, const int = 20);
+    maze(SDL_Renderer*, const int = 20, const int = 7500);
     ~maze();
     bool checkBoundaries(int, int);
     pair<int, int> startCell();
@@ -32,7 +32,6 @@ class maze {
   private:
     int size;
     vector<vector<cell>> grid;
-    //cell ** grid; // hard coded right now, but will be flexible later
     stack<cell> cellStack;
     set<pair<int, int>> frontier;
 };
